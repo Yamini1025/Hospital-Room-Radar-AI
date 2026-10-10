@@ -1,0 +1,38 @@
+.navbar {
+  border-bottom: 1px solid #dce7ee;
+  background: #fff;
+}
+
+.navbar-brand {
+  display: flex;
+  width: min(100%, 1420px);
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+  padding: 16px clamp(16px, 4vw, 56px);
+  color: #123958;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  border-radius: 9px;
+  background: #e8f4fa;
+  color: #08729e;
+}
+
+.navbar-logo svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}

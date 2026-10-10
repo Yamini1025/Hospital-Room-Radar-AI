@@ -1,0 +1,37 @@
+.dashboard {
+  width: min(100%, 1420px);
+  margin: 0 auto;
+}
+
+.dashboard-intro {
+  max-width: 700px;
+  margin-bottom: 30px;
+}
+
+.dashboard-title {
+  margin: 0 0 8px;
+  color: #102a43;
+  font-size: clamp(32px, 5vw, 44px);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.dashboard-description {
+  max-width: 680px;
+  margin: 0;
+  color: #526779;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 920px) {
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+}
