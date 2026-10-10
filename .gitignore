@@ -3,8 +3,4 @@ backend/.env
 .env
 __pycache__/
 node_modules/
-<<<<<<< HEAD
 *.pyc
-=======
-*.pyc
->>>>>>> ui
