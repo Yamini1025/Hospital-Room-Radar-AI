@@ -64,6 +64,7 @@ Return ONLY valid JSON in this structure:
       "risk_level": "Low, Medium, or High",
       "confidence": 0.0,
       "needs_verification": true
+      "recommended_action": "Practical check or corrective action"
     }
   ],
   "summary": "Brief summary of visible findings",
