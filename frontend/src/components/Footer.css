@@ -1,0 +1,22 @@
+.footer {
+  border-top: 1px solid #dce7ee;
+  background: #fff;
+}
+
+.footer-inner {
+  display: flex;
+  width: min(100%, 1420px);
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 auto;
+  padding: 18px clamp(16px, 4vw, 56px);
+  color: #6c8191;
+  font-size: 12px;
+}
+
+@media (max-width: 420px) {
+  .footer-inner {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

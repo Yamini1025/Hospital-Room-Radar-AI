@@ -1,0 +1,41 @@
+{
+  "room-101": {
+    "room": "Room 101",
+    "ward": "ICU Stepdown",
+    "confidence": "94%",
+    "summary": "Trip hazard identified in primary bed path.",
+    "details": "The floor cable from the telemetry monitor crosses the walking path between the bed rail and patient room door.",
+    "recommendation": "Secure power line using hospital-grade rubber cable bridge or route along perimeter baseboard clip.",
+    "findings": [
+      { "label": "Fall Safety Agent", "value": "Trip alert identified", "tone": "warning" },
+      { "label": "Equipment Clearance Agent", "value": "Clearance needs review", "tone": "warning" },
+      { "label": "Patient-Care Agent", "value": "Pathway accessible", "tone": "success" }
+    ]
+  },
+  "room-102": {
+    "room": "Room 102",
+    "ward": "Cardiac Ward",
+    "confidence": "98%",
+    "summary": "Room geometry is suitable for patient care.",
+    "details": "The bed-to-door path is clear, bedside equipment is positioned safely, and required care access points remain unobstructed.",
+    "recommendation": "Maintain current equipment placement and continue routine visual checks.",
+    "findings": [
+      { "label": "Fall Safety Agent", "value": "No hazards found", "tone": "success" },
+      { "label": "Equipment Clearance Agent", "value": "Brakes locked", "tone": "success" },
+      { "label": "Patient-Care Agent", "value": "Care path clear", "tone": "success" }
+    ]
+  },
+  "room-103": {
+    "room": "Room 103",
+    "ward": "Orthopedics",
+    "confidence": "Pending",
+    "summary": "Analysis has not been completed.",
+    "details": "The room is waiting for the next three-agent analysis to begin.",
+    "recommendation": "Start an analysis to generate the clinical room report.",
+    "findings": [
+      { "label": "Fall Safety Agent", "value": "Waiting to run", "tone": "pending" },
+      { "label": "Equipment Clearance Agent", "value": "Waiting to run", "tone": "pending" },
+      { "label": "Patient-Care Agent", "value": "Waiting to run", "tone": "pending" }
+    ]
+  }
+}
