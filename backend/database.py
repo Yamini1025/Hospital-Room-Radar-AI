@@ -16,4 +16,4 @@ table = dynamodb.Table(os.getenv("DYNAMODB_TABLE_NAME"))
 
 def get_rooms():
     response = table.scan()
-    return response["Items"]
+    return response.get("Items", [])
