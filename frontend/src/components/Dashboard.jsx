@@ -6,10 +6,48 @@ import SafetyReport from './SafetyReport.jsx';
 import './Dashboard.css';
 
 function Dashboard() {
-  const rooms = mockRooms;
+  const [rooms, setRooms] = useState(mockRooms);
   const [roomStates, setRoomStates] = useState({});
   const [selectedReport, setSelectedReport] = useState(null);
   const timers = useRef({});
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/images')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Image request failed with status ${response.status}`);
+        }
+
+        return response.json();
+      })
+      .then((result) => {
+        if (!Array.isArray(result.data)) {
+          throw new Error('Image response did not include a data array');
+        }
+
+        setRooms((currentRooms) =>
+          currentRooms.map((room) => {
+            const image = result.data.find((item) => {
+              const imageId = String(item.image_id ?? item.room_number ?? '');
+              const roomId = String(room.id).replace(/^room-/, '');
+              return imageId === room.id || imageId === roomId || `room-${imageId}` === room.id;
+            });
+
+            return image
+              ? {
+                  ...room,
+                  image: image.url || image.image_url,
+                  imageAlt: `Room ${image.room_number ?? image.image_id}`,
+                  title: `Room ${image.room_number ?? image.image_id}`,
+                }
+              : room;
+          }),
+        );
+      })
+      .catch((error) => {
+        console.error('Failed to load room images:', error);
+      });
+  }, []);
 
   useEffect(() => () => {
     Object.values(timers.current).forEach((timer) => window.clearTimeout(timer));
