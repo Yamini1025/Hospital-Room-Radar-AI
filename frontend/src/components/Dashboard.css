@@ -30,6 +30,11 @@
   gap: 20px;
 }
 
+.dashboard-error {
+  color: #b33a3a;
+  font-size: 14px;
+}
+
 @media (max-width: 920px) {
   .dashboard-cards {
     grid-template-columns: 1fr;

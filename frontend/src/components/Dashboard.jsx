@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import mockRooms from '../data/mockRooms.json';
 import mockReports from '../data/mockReports.json';
 import RoomCard from './RoomCard.jsx';
 import SafetyReport from './SafetyReport.jsx';
 import './Dashboard.css';
 
 function Dashboard() {
-  const [rooms, setRooms] = useState(mockRooms);
+  const [rooms, setRooms] = useState([]);
+  const [imageError, setImageError] = useState('');
   const [roomStates, setRoomStates] = useState({});
   const [selectedReport, setSelectedReport] = useState(null);
   const timers = useRef({});
@@ -25,27 +25,26 @@ function Dashboard() {
           throw new Error('Image response did not include a data array');
         }
 
-        setRooms((currentRooms) =>
-          currentRooms.map((room) => {
-            const image = result.data.find((item) => {
-              const imageId = String(item.image_id ?? item.room_number ?? '');
-              const roomId = String(room.id).replace(/^room-/, '');
-              return imageId === room.id || imageId === roomId || `room-${imageId}` === room.id;
-            });
+        setRooms(result.data.map((image) => {
+          const roomNumber = image.room_number ?? image.image_id;
+          const roomId = `room-${roomNumber}`;
 
-            return image
-              ? {
-                  ...room,
-                  image: image.url || image.image_url,
-                  imageAlt: `Room ${image.room_number ?? image.image_id}`,
-                  title: `Room ${image.room_number ?? image.image_id}`,
-                }
-              : room;
-          }),
-        );
+          return {
+            id: roomId,
+            image: image.url || image.image_url,
+            imageAlt: `Room ${roomNumber}`,
+            title: `Room ${roomNumber}`,
+            agents: [
+              { name: 'Fall Safety Agent', status: 'Analyzing fall risks' },
+              { name: 'Equipment Clearance Agent', status: 'Checking clearance' },
+              { name: 'Patient-Care & Hygiene Agent', status: 'Reviewing care conditions' },
+            ],
+          };
+        }));
       })
       .catch((error) => {
         console.error('Failed to load room images:', error);
+        setImageError('Unable to load hospital rooms right now.');
       });
   }, []);
 
@@ -84,19 +83,23 @@ function Dashboard() {
       </header>
 
       <div className="dashboard-cards">
-        {rooms.map((room) => (
-          <RoomCard
-            key={room.id}
-            room={room}
-            agents={room.agents.map((agent) => ({
-              ...agent,
-              state: roomStates[room.id] || 'pending',
-            }))}
-            onStartAnalysis={() => startAnalysis(room.id)}
-            onViewReport={() => setSelectedReport(mockReports[room.id])}
-            reportReady={roomStates[room.id] === 'completed'}
-          />
-        ))}
+        {imageError ? (
+          <p className="dashboard-error">{imageError}</p>
+        ) : (
+          rooms.map((room) => (
+            <RoomCard
+              key={room.id}
+              room={room}
+              agents={room.agents.map((agent) => ({
+                ...agent,
+                state: roomStates[room.id] || 'pending',
+              }))}
+              onStartAnalysis={() => startAnalysis(room.id)}
+              onViewReport={() => setSelectedReport(mockReports[room.id])}
+              reportReady={roomStates[room.id] === 'completed'}
+            />
+          ))
+        )}
       </div>
 
       {selectedReport && (
