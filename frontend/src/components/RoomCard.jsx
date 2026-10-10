@@ -35,10 +35,6 @@ function RoomCard({
         <img className="room-image" src={room.image} alt={room.imageAlt || ''} />
       </div>
 
-      <header className="room-header">
-        <span className="room-eyebrow">{room.eyebrow || 'AI ROOM ANALYSIS'}</span>
-      </header>
-
       <h2 className="room-title">{room.title || 'Evaluating Room Geometry'}</h2>
 
       <div className="room-agents" aria-label="AI agent loading states">

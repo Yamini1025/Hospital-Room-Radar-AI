@@ -1,13 +1,12 @@
 [
   {
     "id": "room-101",
-    "image": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=85",
+    "image": "",
     "imageAlt": "Hospital room with a patient bed",
-    "eyebrow": "CONSENSUS CLINICAL FINDING",
     "status": "Analyzing",
     "riskLabel": "Medium Risk",
     "riskTone": "warning",
-    "title": "Trip hazard identified in primary bed path.",
+    "title": "Room 101",
     "agents": [
       { "name": "Fall Safety Agent", "state": "loading", "status": "Analyzing fall risks" },
       { "name": "Equipment Clearance Agent", "state": "loading", "status": "Checking clearance" },
@@ -16,13 +15,12 @@
   },
   {
     "id": "room-102",
-    "image": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=900&q=85",
+    "image": "",
     "imageAlt": "Modern hospital room with medical equipment",
-    "eyebrow": "ACTIVE CONSENSUS REVIEW",
     "status": "● Live",
     "riskLabel": "Analyzing",
     "riskTone": "info",
-    "title": "Evaluating Room Geometry",
+    "title": "Room 102",
     "agents": [
       { "name": "Fall Safety Agent", "state": "loading", "status": "Analyzing fall risks" },
       { "name": "Equipment Clearance Agent", "state": "loading", "status": "Checking clearance" },
@@ -31,13 +29,12 @@
   },
   {
     "id": "room-103",
-    "image": "https://images.unsplash.com/photo-1512678080530-7760d81faba6?auto=format&fit=crop&w=900&q=85",
+    "image": "",
     "imageAlt": "Bright hospital room hallway",
-    "eyebrow": "AWAITING TRIGGER",
     "status": "Pending",
     "riskLabel": "Pending Audit",
     "riskTone": "pending",
-    "title": "Awaiting Next Analytical Stream",
+    "title": "Room 103",
     "agents": [
       { "name": "Fall Safety Agent", "state": "loading", "status": "Analyzing fall risks" },
       { "name": "Equipment Clearance Agent", "state": "loading", "status": "Checking clearance" },
