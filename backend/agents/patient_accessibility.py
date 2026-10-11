@@ -21,7 +21,9 @@ findings. Do not invent hazards.
 CHECK FOR:
 - Nurse-call buttons, call cords, or call remotes that appear
   visibly out of reach, trapped behind furniture, or inaccessible
-  from the patient's bed
+  from the patient's bed 
+- If there is a call cord attached to any machine or device, check whether it is visibly reachable from the bed. 
+  If not, report it as a potential accessibility concern.
 - Mobility aids, such as walkers, wheelchairs, or canes, that appear
   inaccessible to a patient who may need them
 - IV stands or other patient-associated equipment that appear
@@ -34,6 +36,7 @@ CHECK FOR:
   other objects, preventing apparent access from the bed
 - Bedside assistance devices or essential items placed in locations
   that appear difficult for the patient to access independently
+- Disconnected or unplugged cords
 
 SPATIAL REASONING RULES:
 1. Judge accessibility relative to the patient's visible position,
