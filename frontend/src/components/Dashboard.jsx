@@ -29,9 +29,9 @@ function Dashboard() {
             imageAlt: `Room ${roomNumber}`,
             title: `Room ${roomNumber}`,
             agents: [
-              { name: 'Fall Safety Agent', status: 'Checking fall risks' },
-              { name: 'Equipment Safety Agent', status: 'Checking equipment' },
-              { name: 'Patient-Care Agent', status: 'Checking care concerns' },
+              { name: 'Fall Safety', status: 'Checking fall risks' },
+              { name: 'Infection and Hygiene', status: 'Checking infection and hygiene risks' },
+              { name: 'Patient Accessibility', status: 'Checking accessibility' },
             ],
           };
         }));
