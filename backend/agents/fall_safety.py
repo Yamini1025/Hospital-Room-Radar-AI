@@ -6,7 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
 
-load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 MODEL = os.getenv("GROQ_VISION_MODEL")
@@ -59,7 +59,7 @@ Return ONLY valid JSON in this structure:
       "evidence": "Specific visible evidence",
       "risk_level": "Low, Medium, or High",
       "confidence": 0.0,
-      "needs_verification": true
+      "needs_verification": true,
       "recommended_action": "Practical check or corrective action"
     }
   ],

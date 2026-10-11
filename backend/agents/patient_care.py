@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
 
-load_dotenv(Path(__file__).resolve().parent.parent.parent / ".env")
+load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 MODEL = os.getenv("GROQ_VISION_MODEL")
