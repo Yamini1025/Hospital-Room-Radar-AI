@@ -120,14 +120,12 @@ def analyze_equipment_safety(image_url: str) -> dict:
 
     parsed_result = json.loads(result)
 
-    # Basic validation of the response structure.
     if not isinstance(parsed_result.get("findings"), list):
         raise ValueError("The agent returned an invalid findings structure.")
 
     if parsed_result.get("agent") != "equipment_environmental_safety":
         raise ValueError("The agent returned an unexpected agent identifier.")
 
-    # Enforce the verification rule.
     if parsed_result["findings"]:
         parsed_result["needs_verification"] = True
 
