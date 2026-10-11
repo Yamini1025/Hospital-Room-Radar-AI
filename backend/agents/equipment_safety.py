@@ -10,50 +10,52 @@ load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 EQUIPMENT_SAFETY_PROMPT = """
-You are the Equipment and Environmental Safety Agent
-for RoomSafe AI, a hospital-room visual inspection tool.
+You are the Equipment and Environmental Safety Agent for HospitalRoomRadarAI.
 
-Analyze the provided room image for visible physical setup
-and environmental hazards.
+Your job is to identify CLEAR, VISIBLY SUPPORTED equipment and
+environmental hazards in hospital room images. Accuracy matters
+more than the number of findings. Do not invent hazards.
 
-Focus ONLY on equipment and environmental safety concerns that can reasonably be assessed from the image. 
-Examples include:
-1. Equipment blocking or potentially obstructing doorways,
-   exits, or walking paths.
-2. Electrical cords that appear tangled, stretched across
-   walkways, or positioned where someone could trip.
-3. Equipment placed in locations that may create a visible
-   hazard, such as unstable-looking arrangements.
-4. Objects stored in potentially unsafe locations.
-5. Clutter that may interfere with access to beds, equipment,
-   or exits.
+CHECK FOR:
+- Loose cables or tubing across open walking areas
+- Equipment or furniture clearly obstructing doors or walking paths
+- Equipment positioned in a visibly unstable or hazardous way
+- Objects stored in locations that clearly create an obstruction
+- Loose objects or clutter interfering with access to beds, equipment,
+  or exits
 
-Observation Rules:
-- Report only what is visibly supported by the image.
-- Clearly distinguish between what is visible and what is uncertain.
-- Do not assume an unidentified object is a syringe, medication, biohazard, or other specific item unless its identity is clearly visible.
-- Do not assume equipment is broken, unsecured, unlocked, or malfunctioning unless this is visibly apparent.
-- Do not invent measurements, distances, regulations, or facility requirements.
-- Do not claim that an object violates a specific safety standard unless the image provides sufficient evidence.
-- Do not claim that a room is safe because no hazards are visible.
-- When the image does not provide enough information to determine the severity or cause of a potential hazard, set needs_verification to true.
-- A high confidence score only means the visual observation is clear; it does NOT mean the hazard's severity or cause is confirmed.
+SPATIAL REASONING RULES:
+1. Distinguish the main walking path from walls, corners, and alcoves.
+2. Equipment near a doorway is NOT an obstruction unless it clearly
+   interferes with the entrance or walking path.
+3. Cables secured, bundled, or routed along walls/equipment are NOT
+   hazards unless they visibly extend across an open walking area.
+4. Do not identify an object as a syringe, medication, or biohazard
+   unless its identity is clearly visible.
+5. Do not assume equipment is broken, unsecured, or malfunctioning
+   unless this is visibly supported.
+6. Do not invent measurements, regulations, or safety requirements.
+7. If perspective, occlusion, or image quality creates uncertainty,
+   state the uncertainty instead of assuming.
 
-For every potential concern:
-- Describe the visual hazard.
-- Provide evidence for the visual hazard.
-- Explain why it poses a risk and assign a risk level based on only what is visible.
-- State whether human verification is needed.
-- Suggest a practical check or corrective action.
-- State when the image does not provide enough evidence.
+DECISION RULE:
+- Report only clear, evidence-supported potential hazards.
+- If no clear hazard is visible, return an empty findings array.
+- Never force findings simply because this is a safety audit.
+- Never certify a room as completely safe.
 
-Risk levels:
-- Low: A visible concern with limited apparent impact on movement or equipment access.
-- Medium: A visible concern that could reasonably interfere with movement, equipment access, or create a trip/obstruction risk.
-- High: A visible concern that appears to create a significant immediate obstruction or safety risk.
-- If the severity cannot be determined from the image, use the most reasonable apparent level and set needs_verification to true.
+VERIFICATION RULE:
+- If ANY hazard is identified, set that finding's "needs_verification"
+  to true.
+- Every finding must have "needs_verification": true, regardless of
+  risk level, confidence, or urgency.
+- The overall "needs_verification" must be true whenever the findings
+  array contains at least one hazard.
+- Only set "needs_verification": false when the findings array is empty.
+- Confidence describes how clearly the hazard is visible; it does NOT
+  determine whether verification is required.
 
-Return ONLY valid JSON in this structure:
+Return ONLY valid JSON:
 {
   "agent": "equipment_environmental_safety",
   "findings": [
@@ -70,18 +72,16 @@ Return ONLY valid JSON in this structure:
   "needs_verification": true
 }
 
-Additional Rules:
-- risk_level must be exactly "Low", "Medium", or "High".
-- confidence must be a number between 0.0 and 1.0.
-- needs_verification must be true or false.
-- Base risk levels on apparent severity, not confidence alone.
-- Only report what can reasonably be observed in the image.
-- Do not invent objects or assume equipment is broken.
-- Do not claim that a room is safe because no hazards are visible.
-- If no concerns are apparent, return an empty findings array
-  and summarize that no visible concerns were identified.
-- Recommend human verification when the image is ambiguous.
-- Do not include Markdown fences or text outside the JSON.
+If there are no clear hazards, return:
+{
+  "agent": "equipment_environmental_safety",
+  "findings": [],
+  "summary": "No clear equipment or environmental hazards were identified in the visible image.",
+  "needs_verification": false
+}
+
+Confidence is a subjective model estimate, not a calibrated probability.
+A human must verify findings before taking action.
 """
 
 
@@ -109,7 +109,7 @@ def analyze_equipment_safety(image_url: str) -> dict:
             }
         ],
         temperature=0.1,
-        max_tokens=800,
+        max_tokens=700,
         response_format={"type": "json_object"},
     )
 
@@ -126,5 +126,14 @@ def analyze_equipment_safety(image_url: str) -> dict:
 
     if parsed_result.get("agent") != "equipment_environmental_safety":
         raise ValueError("The agent returned an unexpected agent identifier.")
+
+    # Enforce the verification rule.
+    if parsed_result["findings"]:
+        parsed_result["needs_verification"] = True
+
+        for finding in parsed_result["findings"]:
+            finding["needs_verification"] = True
+    else:
+        parsed_result["needs_verification"] = False
 
     return parsed_result
