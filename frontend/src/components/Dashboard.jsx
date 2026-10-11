@@ -31,7 +31,7 @@ function Dashboard() {
             agents: [
               { name: 'Fall Safety', status: 'Checking fall risks' },
               { name: 'Infection and Hygiene', status: 'Checking infection and hygiene risks' },
-              { name: 'Patient Accessibility', status: 'Checking accessibility' },
+              { name: 'Equipment Readiness', status: 'Checking equipment readiness' },
             ],
           };
         }));

@@ -4,7 +4,7 @@ import './RoomCard.css';
 const defaultAgents = [
   { name: 'Fall Safety', state: 'loading', status: 'Analyzing fall risks' },
   { name: 'Infection and Hygiene', state: 'loading', status: 'Checking infection and hygiene risks' },
-  { name: 'Patient Accessibility', state: 'loading', status: 'Checking accessibility' },
+  { name: 'Equipment Readiness', state: 'loading', status: 'Checking equipment readiness' },
 ];
 
 function AgentStateIcon({ state }) {
