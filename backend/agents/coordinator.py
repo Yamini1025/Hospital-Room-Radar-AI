@@ -3,11 +3,6 @@ import time
 from agents.fall_safety import analyze_fall_safety
 from agents.infection_hygiene import analyze_infection_safety
 from agents.patient_accessibility import analyze_patient_accessibility
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
 
 def analyze_room(image_url: str) -> dict:
     """Run agents sequentially with a 5-second delay between calls."""
