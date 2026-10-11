@@ -5,8 +5,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
 
-from agents.fall_safety import image_to_data_url
-
 load_dotenv(Path(__file__).resolve().parent.parent.parent / ".env")
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -72,7 +70,8 @@ probability. A human must verify findings before taking action.
 
 def analyze_infection_safety(image_url: str) -> dict:
     """Analyze a hospital room image for infection and care concerns."""
-    image_data_url = image_to_data_url(image_url)
+    if not image_url:
+        raise ValueError("An image URL is required.")
 
     response = client.chat.completions.create(
         model=MODEL,
@@ -93,7 +92,7 @@ def analyze_infection_safety(image_url: str) -> dict:
                     },
                     {
                         "type": "image_url",
-                        "image_url": {"url": image_data_url}
+                        "image_url": {"url": image_url}
                     }
                 ]
             }
