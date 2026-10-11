@@ -12,7 +12,7 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 MODEL = os.getenv(
     "GROQ_MODEL",
-    "meta-llama/llama-4-scout-17b-16e-instruct"
+    "qwen/qwen3.8-27b"
 )
 
 SYSTEM_PROMPT = """
