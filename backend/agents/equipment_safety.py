@@ -1,35 +1,37 @@
-
-import json
 import os
+import json
 
-from groq import Groq
 from dotenv import load_dotenv
+from groq import Groq
 
 load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+MODEL = os.getenv("GROQ_VISION_MODEL")
 
 EQUIPMENT_SAFETY_PROMPT = """
-You are the Equipment and Environmental Safety Agent for HospitalRoomRadarAI.
+You are the Equipment and Environmental Safety Agent for
+HospitalRoomRadarAI.
 
-Your job is to identify CLEAR, VISIBLY SUPPORTED equipment and
-environmental hazards in hospital room images. Accuracy matters
-more than the number of findings. Do not invent hazards.
+Identify clear, visibly supported equipment and environmental
+hazards in hospital room images. Accuracy matters more than the
+number of findings. Do not invent hazards.
 
 CHECK FOR:
 - Loose cables or tubing across open walking areas
 - Equipment or furniture clearly obstructing doors or walking paths
-- Equipment positioned in a visibly unstable or hazardous way
+- Equipment visibly positioned in an unstable or hazardous way
 - Objects stored in locations that clearly create an obstruction
-- Loose objects or clutter interfering with access to beds, equipment,
-  or exits
+- Loose objects or clutter interfering with access to beds,
+  equipment, or exits
 
 SPATIAL REASONING RULES:
 1. Distinguish the main walking path from walls, corners, and alcoves.
-2. Equipment near a doorway is NOT an obstruction unless it clearly
-   interferes with the entrance or walking path.
-3. Cables secured, bundled, or routed along walls/equipment are NOT
-   hazards unless they visibly extend across an open walking area.
+2. Equipment near a doorway is not an obstruction unless it
+   clearly interferes with the entrance or walking path.
+3. Cables bundled, secured, or routed along walls or equipment
+   are not hazards unless they visibly extend across an open
+   walking area.
 4. Do not identify an object as a syringe, medication, or biohazard
    unless its identity is clearly visible.
 5. Do not assume equipment is broken, unsecured, or malfunctioning
@@ -41,23 +43,17 @@ SPATIAL REASONING RULES:
 DECISION RULE:
 - Report only clear, evidence-supported potential hazards.
 - If no clear hazard is visible, return an empty findings array.
-- Never force findings simply because this is a safety audit.
+- Do not force findings simply because this is a safety audit.
 - Never certify a room as completely safe.
 
 VERIFICATION RULE:
-- If ANY hazard is identified, set that finding's "needs_verification"
-  to true.
-- Every finding must have "needs_verification": true, regardless of
-  risk level, confidence, or urgency.
-- The overall "needs_verification" must be true whenever the findings
-  array contains at least one hazard.
-- Only set "needs_verification": false when the findings array is empty.
-- Confidence describes how clearly the hazard is visible; it does NOT
-  determine whether verification is required.
+- Every reported finding must have needs_verification set to true.
+- The overall needs_verification must be true when findings exist.
+- Only set overall needs_verification to false when findings is empty.
 
-Return ONLY valid JSON:
+Return ONLY valid JSON in this structure:
 {
-  "agent": "equipment_environmental_safety",
+  "agent": "equipment_safety",
   "findings": [
     {
       "hazard": "Short description",
@@ -74,7 +70,7 @@ Return ONLY valid JSON:
 
 If there are no clear hazards, return:
 {
-  "agent": "equipment_environmental_safety",
+  "agent": "equipment_safety",
   "findings": [],
   "summary": "No clear equipment or environmental hazards were identified in the visible image.",
   "needs_verification": false
@@ -92,39 +88,46 @@ def analyze_equipment_safety(image_url: str) -> dict:
         raise ValueError("An image URL is required.")
 
     response = client.chat.completions.create(
-        model=os.getenv("GROQ_VISION_MODEL"),
+        model=MODEL,
+        temperature=0.1,
+        max_tokens=700,
         messages=[
+            {
+                "role": "system",
+                "content": EQUIPMENT_SAFETY_PROMPT,
+            },
             {
                 "role": "user",
                 "content": [
                     {
                         "type": "text",
-                        "text": EQUIPMENT_SAFETY_PROMPT,
+                        "text": (
+                            "Inspect this image for clear equipment and "
+                            "environmental hazards. Return JSON only."
+                        ),
                     },
                     {
                         "type": "image_url",
                         "image_url": {"url": image_url},
                     },
                 ],
-            }
+            },
         ],
-        temperature=0.1,
-        max_tokens=700,
         response_format={"type": "json_object"},
     )
 
-    result = response.choices[0].message.content
+    content = response.choices[0].message.content
 
-    if not result:
-        raise ValueError("Groq returned an empty response.")
+    if not content:
+        raise ValueError("The agent returned an empty response.")
 
-    parsed_result = json.loads(result)
+    parsed_result = json.loads(content)
 
     if not isinstance(parsed_result.get("findings"), list):
         raise ValueError("The agent returned an invalid findings structure.")
 
-    if parsed_result.get("agent") != "equipment_environmental_safety":
-        raise ValueError("The agent returned an unexpected agent identifier.")
+    # Set the identifier in Python instead of trusting the model output.
+    parsed_result["agent"] = "equipment_safety"
 
     if parsed_result["findings"]:
         parsed_result["needs_verification"] = True
