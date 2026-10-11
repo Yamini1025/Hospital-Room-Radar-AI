@@ -9,10 +9,7 @@ from groq import Groq
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-MODEL = os.getenv(
-    "GROQ_MODEL",
-    "qwen/qwen3.8-27b"
-)
+MODEL = os.getenv("GROQ_VISION_MODEL")
 
 SYSTEM_PROMPT = """
 You are the Patient and Fall Safety Agent for Hospital Room Radar AI.
