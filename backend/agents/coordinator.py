@@ -1,8 +1,9 @@
 import time
 
-from agents.fall_safety import analyze_fall_safety
+from backend.agents.fall_safety import analyze_fall_safety
+from backend.agents.infection_hygiene import analyze_infection_safety
 from backend.agents.patient_accessibility import analyze_patient_accessibility
-from agents.patient_care import analyze_infection_safety
+
 
 
 def analyze_room(image_url: str) -> dict:
