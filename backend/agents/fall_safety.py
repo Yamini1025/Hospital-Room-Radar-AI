@@ -1,6 +1,5 @@
 import os
 import json
-import base64
 from urllib.request import Request, urlopen
 from pathlib import Path
 
@@ -16,7 +15,7 @@ MODEL = os.getenv(
 )
 
 SYSTEM_PROMPT = """
-You are the Patient and Fall Safety Agent for HospitalRoomRadarAI.
+You are the Patient and Fall Safety Agent for Hospital Room Radar AI.
 
 Your job is to identify CLEAR, VISIBLY SUPPORTED fall and mobility
 hazards in hospital room images. Accuracy matters more than the
@@ -83,30 +82,10 @@ Confidence is a subjective model estimate, not a calibrated probability.
 A human must verify findings before taking action.
 """
 
-
-def image_to_data_url(image_url: str) -> str:
-    """Download an image and encode it for the vision model."""
-    request = Request(
-        image_url,
-        headers={"User-Agent": "HospitalRoomRadarAI/1.0"}
-    )
-
-    with urlopen(request, timeout=15) as response:
-        image_bytes = response.read()
-        content_type = response.headers.get(
-            "Content-Type", "image/jpeg"
-        ).split(";")[0]
-
-    if not content_type.startswith("image/"):
-        raise ValueError("URL did not return an image.")
-
-    encoded = base64.b64encode(image_bytes).decode("utf-8")
-    return f"data:{content_type};base64,{encoded}"
-
-
 def analyze_fall_safety(image_url: str) -> dict:
     """Analyze one hospital room image for potential fall hazards."""
-    image_data_url = image_to_data_url(image_url)
+    if not image_url:
+            raise ValueError("An image URL is required.")
 
     response = client.chat.completions.create(
         model=MODEL,
@@ -126,7 +105,7 @@ def analyze_fall_safety(image_url: str) -> dict:
                     },
                     {
                         "type": "image_url",
-                        "image_url": {"url": image_data_url}
+                        "image_url": {"url": image_url}
                     }
                 ]
             }
