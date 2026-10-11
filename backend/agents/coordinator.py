@@ -1,7 +1,7 @@
 import time
 
 from agents.fall_safety import analyze_fall_safety
-from agents.equipment_safety import analyze_equipment_safety
+from backend.agents.patient_accessibility import analyze_patient_accessibility
 from agents.patient_care import analyze_infection_safety
 
 
@@ -10,7 +10,7 @@ def analyze_room(image_url: str) -> dict:
 
     agent_functions = [
         ("fall_safety", analyze_fall_safety),
-        ("equipment_safety", analyze_equipment_safety),
+        ("equipment_safety", analyze_patient_accessibility),
         ("patient_care", analyze_infection_safety),
     ]
 
