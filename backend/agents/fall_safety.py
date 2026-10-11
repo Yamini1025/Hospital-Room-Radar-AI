@@ -23,8 +23,6 @@ CHECK FOR:
 - Objects on the floor in a patient's walking path
 - Furniture clearly obstructing the route between the bed and
   the main doorway
-- Mobility aids that are visibly blocked or inaccessible
-- Clearly visible wet-looking floor areas in walking paths
 
 SPATIAL REASONING RULES:
 1. Distinguish the main walking path from the room's perimeter,
