@@ -1,8 +1,8 @@
 import time
 
-from backend.agents.fall_safety import analyze_fall_safety
-from backend.agents.infection_hygiene import analyze_infection_safety
-from backend.agents.patient_accessibility import analyze_patient_accessibility
+from agents.fall_safety import analyze_fall_safety
+from agents.infection_hygiene import analyze_infection_safety
+from agents.patient_accessibility import analyze_patient_accessibility
 
 
 
