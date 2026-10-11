@@ -151,6 +151,84 @@
   margin-bottom: 10px;
 }
 
+.report-actions {
+  margin: 0 0 20px;
+}
+
+.report-image-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid #b7d3e4;
+  border-radius: 10px;
+  background: #edf7fd;
+  color: #0d4f73;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.report-image-button:hover {
+  background: #deeff9;
+  transform: translateY(-1px);
+}
+
+.report-image-button:focus-visible {
+  outline: 3px solid rgb(25 118 168 / 30%);
+  outline-offset: 2px;
+}
+
+.room-image-preview {
+  position: fixed;
+  z-index: 110;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(8 25 38 / 88%);
+}
+
+.room-image-preview-content {
+  position: relative;
+  display: grid;
+  max-width: min(1200px, 96vw);
+  max-height: 96vh;
+  place-items: center;
+}
+
+.room-image-preview-image {
+  display: block;
+  max-width: 100%;
+  max-height: 96vh;
+  object-fit: contain;
+}
+
+.room-image-preview-close {
+  position: absolute;
+  z-index: 1;
+  top: -14px;
+  right: -14px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #102a43;
+  cursor: pointer;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.room-image-preview-close:focus-visible {
+  outline: 3px solid rgb(25 118 168 / 70%);
+  outline-offset: 2px;
+}
+
 .report-summary {
   margin: 0 0 12px;
   color: #102a43;
@@ -445,6 +523,10 @@
 
   .report-content {
     padding: 20px 16px 22px;
+  }
+
+  .room-image-preview {
+    padding: 16px;
   }
 
   .report-confidence {

@@ -4,6 +4,22 @@ import RoomCard from './RoomCard.jsx';
 import SafetyReport from './SafetyReport.jsx';
 import './Dashboard.css';
 
+function getRiskStatus(findings, hasErrors) {
+  if (hasErrors) {
+    return null;
+  }
+
+  if (findings.length === 0) {
+    return 'safe';
+  }
+
+  const hasHighRiskFinding = findings.some((finding) =>
+    String(finding.risk_level || '').trim().toLowerCase().startsWith('high')
+  );
+
+  return hasHighRiskFinding ? 'high risk' : 'low risk';
+}
+
 function Dashboard() {
   const [rooms, setRooms] = useState([]);
   const [imageError, setImageError] = useState('');
@@ -60,11 +76,15 @@ function Dashboard() {
 
       const rawFindings =
         finalReport?.findings ?? result.findings ?? [];
+      const hasAgentErrors = Object.keys(result.errors || {}).length > 0;
 
       const report = {
         room: room.title,
         ward: 'AI-generated safety assessment',
-        confidence: result.errors && Object.keys(result.errors).length
+        image: room.image,
+        imageAlt: room.imageAlt || room.title,
+        riskStatus: getRiskStatus(rawFindings, hasAgentErrors),
+        confidence: hasAgentErrors
           ? 'Incomplete — human review required'
           : (result.needs_verification
             ? 'Human verification required'
@@ -72,7 +92,7 @@ function Dashboard() {
         summary: finalReport?.overall_summary
           || result.message
           || 'Analysis completed.',
-        details: Object.keys(result.errors || {}).length
+        details: hasAgentErrors
           ? `Some agents failed: ${Object.entries(result.errors)
               .map(([agent, error]) => `${agent}: ${error}`)
               .join('; ')}`
@@ -143,6 +163,7 @@ function Dashboard() {
                 onStartAnalysis={() => startAnalysis(room)}
                 onViewReport={() => setSelectedReport(reports[room.id])}
                 reportReady={roomStates[room.id] === 'completed'}
+                riskStatus={reports[room.id]?.riskStatus}
               />
 
               {analysisErrors[room.id] && (

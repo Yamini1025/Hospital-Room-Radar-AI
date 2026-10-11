@@ -1,6 +1,24 @@
+import { useEffect, useState } from 'react';
 import './SafetyReport.css';
 
 function SafetyReport({ report, onClose }) {
+  const [isImageOpen, setIsImageOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isImageOpen) {
+      return undefined;
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setIsImageOpen(false);
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isImageOpen]);
+
   return (
     <div className="report-modal" role="presentation">
       <button
@@ -44,6 +62,19 @@ function SafetyReport({ report, onClose }) {
             <p className="report-summary">{report.summary}</p>
             <p className="report-details">{report.details}</p>
           </section>
+
+          {report.image && (
+            <div className="report-actions">
+              <button
+                type="button"
+                className="report-image-button"
+                onClick={() => setIsImageOpen(true)}
+                aria-label={`Open ${report.imageAlt || report.room} image`}
+              >
+                Open room image
+              </button>
+            </div>
+          )}
 
           <h3 className="findings-heading">
             Findings <span>{report.findings.length}</span>
@@ -130,6 +161,35 @@ function SafetyReport({ report, onClose }) {
           </p>
         </div>
       </section>
+
+      {isImageOpen && (
+        <div
+          className="room-image-preview"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${report.imageAlt || report.room} image`}
+          onClick={() => setIsImageOpen(false)}
+        >
+          <div
+            className="room-image-preview-content"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="room-image-preview-close"
+              type="button"
+              onClick={() => setIsImageOpen(false)}
+              aria-label="Close room image"
+            >
+              ×
+            </button>
+            <img
+              className="room-image-preview-image"
+              src={report.image}
+              alt={report.imageAlt || report.room}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

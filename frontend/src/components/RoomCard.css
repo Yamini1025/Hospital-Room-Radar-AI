@@ -7,6 +7,38 @@
   box-shadow: 0 18px 45px rgb(34 71 103 / 12%);
 }
 
+.room-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.room-risk-badge {
+  flex: 0 0 auto;
+  margin: 18px 20px 0 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.room-risk-safe {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.room-risk-low-risk {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.room-risk-high-risk {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 .room-image-wrap {
   display: block;
   width: 100%;
